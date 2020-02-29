@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>个人健康管理系统</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+    <link href="/css/bootstrap_v4.2.1.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/logindefault.css" id="theme-stylesheet">
+  </head>
+  <body>
+    <div class="page login-page">
+      <div class="container d-flex align-items-center">
+        <div class="form-holder has-shadow">
+          <div class="row">
+            <!-- Logo & Information Panel-->
+            <div class="col-lg-6">
+              <div class="info d-flex align-items-center">
+                <div class="content">
+                  <div class="logo">
+                    <h1>欢迎注册</h1>
+                  </div>
+                  <p>个人健康管理系统注册页面</p>
+                </div>
+              </div>
+            </div>
+            <!-- Form Panel    -->
+            <div class="col-lg-6 bg-white">
+              <div class="form d-flex align-items-center">
+                <div class="content">
+                  <form  class="form-validate" id="registerFrom">
+
+                    <div class="form-group">
+                      <input id="name" class="input-material" type="text" name="name" placeholder="请输入姓名" >
+
+                    </div>
+                    <div class="form-group">
+                      <input id="username" class="input-material" type="text" name="username" placeholder="请输入用户名"   >
+
+                    </div>
+                    <div class="form-group">
+                      <input id="password" class="input-material" type="password" name="password" placeholder="请输入密码"   >
+
+                    </div>
+                    <div class="form-group">
+                      <input id="repassword" class="input-material" type="password" name="repassword" placeholder="确认密码"   >
+
+                    </div>
+                    <div class="form-group">
+                      <input id="mobile" class="input-material" type="text" name="mobile" placeholder="请输入手机号"   >
+
+                    </div>
+                    <div class="form-group">
+                      <input id="email" class="input-material" type="email" name="email" placeholder="请输入邮箱"   >
+
+                    </div>
+                    <div class="form-group">
+                      <button id="register" type="button" name="registerSubmit" class="btn btn-primary">注册</button>
+                    </div>
+                  </form>
+                  <small>已有账号?</small><a href="/login" class="signup">&nbsp;登录</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- JavaScript files-->
+    <script th:inline="javascript"> var ctx = [[@{
+        /}]] ; </script>
+    <script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.6" th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+    <script src="/js/plugins/validate/jquery.validate.min.js"
+            th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+    <script src="/js/plugins/validate/messages_zh.min.js" th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+    <script src="/js/plugins/layer/layer.min.js" th:src="@{/js/plugins/layer/layer.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#register").on('click', function () {
+                $("#registerFrom").submit();
+            });
+            validateRule();
+            $("body").keydown(keyDownLogon);
+            // getVerify($("#imgVerify"));
+        });
+
+        $.validator.setDefaults({
+            submitHandler: function () {
+                register();
+            }
+        });
+
+        function register() {
+            $.ajax({
+                type: "POST",
+                url: ctx + "register",
+                data: $('#registerFrom').serialize(),
+                success: function (r) {
+                    if (r.code == 0) {
+                        var index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                        parent.location.href = '/login';
+                    } else {
+                        layer.msg(r.msg);
+                    }
+                },
+            });
+        }
+        $.validator.addMethod("mobile", function(value, element) {
+            var length = value.length;
+            return this.optional(element) || (length == 11 && /^1[34578]\d{9}$/.test(value));
+        }, "手机号码格式错误!");
+        function validateRule() {
+            var icon = "<i class='fa fa-times-circle'></i> ";
+            $("#registerFrom").validate({
+                rules: {
+                    name:{
+                        required: true
+                    },
+                    username: {
+                        required: true,
+                        remote: {
+                            url: "/exitUsername",     //后台处理程序
+                            type: "GET",               //数据发送方式
+                            dataType: "json",           //接受数据格式
+                            data: {                     //要传递的数据
+                                username: function () {
+                                    return $("#username").val()
+                                }
+                            },
+                            error: function () {
+                                layer.msg("服务器错误");
+                            }
+                        }
+                    },
+                    password: {
+                        required: true,
+                        minlength:6,
+                        maxlength:16
+                    },
+                    repassword: {
+                        required: true,
+                        equalTo:'#password'
+                    },
+                    mobile:{
+                        required: true,
+                        mobile:true
+                    },
+                    email:{
+                        required: true,
+                        email:true
+                    }
+
+                },
+                messages: {
+                    name:{
+                        required: "请输入姓名"
+                    },
+
+                    username: {
+                        required: "请输入用户名",
+                        remote: "该用户名已经存在"
+                    },
+                    password: {
+                        required: "请输入密码",
+                        minlength:"最小长度为6",
+                        maxlength:"最小长度为16"
+                    },
+                    repassword: {
+                        required: "请再次输入密码",
+                        equalTo:"两次密码不相同"
+                    },
+                    mobile:{
+                        required: "请输入手机号",
+                        mobile:"手机号格式不正确"
+                    },
+                    email:{
+                        required: "请输入邮箱",
+                        email:"邮箱格式不正确"
+                    }
+                },
+                errorElement: "div",
+                errorClass: 'is-invalid',
+                validClass: 'is-valid',
+                ignore: ':hidden:not(.summernote, .checkbox-template, .form-control-custom),.note-editable.card-block',
+                errorPlacement: function (error, element) {
+                    // Add the `invalid-feedback` class to the error element
+                    error.addClass("invalid-feedback");
+                    console.log(element);
+                    if (element.prop("type") === "checkbox") {
+                        error.insertAfter(element.siblings("label"));
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                }
+            })
+        }
+        function keyDownLogon() {
+            if (event.keyCode == "13") {
+                $("#login").trigger('click');
+            }
+        }
+
+    </script>
+  </body>
+</html>

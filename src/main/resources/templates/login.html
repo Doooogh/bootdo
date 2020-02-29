@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Bootstrap Material Admin</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="robots" content="all,follow">
+  <!--<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.2.1/css/bootstrap.min.css">-->
+  <link href="/css/bootstrap_v4.2.1.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/logindefault.css" id="theme-stylesheet">
+</head>
+<body>
+<div class="page login-page">
+  <div class="container d-flex align-items-center">
+    <div class="form-holder has-shadow">
+      <div class="row">
+        <!-- Logo & Information Panel-->
+        <div class="col-lg-6">
+          <div class="info d-flex align-items-center">
+            <div class="content">
+              <div class="logo">
+                <h1>欢迎登录</h1>
+              </div>
+              <p>个人健康管理系统</p>
+            </div>
+          </div>
+        </div>
+        <!-- Form Panel    -->
+        <div class="col-lg-6 bg-white">
+          <div class="form d-flex align-items-center">
+            <div class="content">
+              <form  class="form-validate" id="loginFrom">
+                <div class="form-group">
+                  <input id="login-username" type="text" name="username" autocomplete="off"  data-msg="请输入用户名" placeholder="用户名"  class="input-material">
+                </div>
+                <div class="form-group">
+                  <input id="login-password" type="password" name="password" autocomplete="off"  data-msg="请输入密码" placeholder="密码" class="input-material">
+                </div>
+                <button id="login" type="button" class="btn btn-primary">登录</button>
+                <div style="margin-top: -40px;">
+                </div>
+              </form>
+              <br />
+              <small>没有账号?</small><a href="/register" class="signup">&nbsp;注册</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- JavaScript files-->
+<script th:inline="javascript"> var ctx = [[@{
+    /}]] ; </script>
+<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script src="/js/bootstrap.min.js?v=3.3.6" th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"
+        th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+<script src="/js/plugins/validate/messages_zh.min.js" th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+<script src="/js/plugins/layer/layer.min.js" th:src="@{/js/plugins/layer/layer.min.js}"></script>
+<!-- Main File-->
+<!--<script src="/js/front.js"></script>-->
+<script>
+    $(document).ready(function () {
+        $("#login").on('click', function () {
+            $("#loginFrom").submit();
+        });
+        validateRule();
+        $("body").keydown(keyDownLogon);
+        // getVerify($("#imgVerify"));
+    });
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            login();
+        }
+    });
+
+
+    function validateRule() {
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#loginFrom").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true
+                }
+            },
+            messages: {
+                username: {
+                    required: icon + "请输入您的用户名",
+                },
+                password: {
+                    required: icon + "请输入您的密码",
+                }
+            },
+            errorElement: "div",
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            ignore: ':hidden:not(.summernote, .checkbox-template, .form-control-custom),.note-editable.card-block',
+            errorPlacement: function (error, element) {
+                // Add the `invalid-feedback` class to the error element
+                error.addClass("invalid-feedback");
+                console.log(element);
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.siblings("label"));
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            }
+        })
+    }
+    function login() {
+        $.ajax({
+            type: "POST",
+            url: ctx + "login",
+            data: $('#loginFrom').serialize(),
+            success: function (r) {
+                if (r.code == 0) {
+                    var index = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                    parent.location.href = '/index';
+                } else {
+                    layer.msg(r.msg);
+                }
+            },
+        });
+    }
+    function keyDownLogon() {
+        if (event.keyCode == "13") {
+            $("#login").trigger('click');
+        }
+    }
+</script>
+</body>
+</html>
