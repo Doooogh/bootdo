@@ -29,4 +29,6 @@ public interface FileDirDao {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+	int listCount(Map<String, Object> map);
 }

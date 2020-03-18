@@ -17,7 +17,9 @@ public interface FileDirService {
 	FileDirDO get(Integer id);
 	
 	List<FileDirDO> list(Map<String, Object> map);
-	
+
+	List<FileDirDO> allList(Map<String, Object> map);
+
 	int count(Map<String, Object> map);
 	
 	int save(FileDirDO fileDir);
@@ -27,6 +29,8 @@ public interface FileDirService {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+	int listCount(Map<String, Object> map);
 
 
 }

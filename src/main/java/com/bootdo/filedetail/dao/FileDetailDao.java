@@ -5,6 +5,7 @@ import com.bootdo.filedetail.domain.FileDetailDO;
 import java.util.List;
 import java.util.Map;
 
+import com.bootdo.filedetail.domain.FileDetailVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -29,4 +30,8 @@ public interface FileDetailDao {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+	List<FileDetailVO> getList(Map<String, Object> map);
+
+	int getListCount(Map<String, Object> map);
 }

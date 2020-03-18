@@ -40,6 +40,18 @@
 		  		  <if test="type != null and type != ''"> and type = #{type} </if>
 		  		</where>
 	</select>
+
+	<select id="listCount" resultType="int">
+		select count(*) from sys_file_dir sf
+		left join sys_user u on sf.create_by=u.user_id
+		<where>
+			<if test="id != null and id != ''"> and sf.id = #{id} </if>
+			<if test="name != null and name != ''"> and sf.name = #{name} </if>
+			<if test="createBy != null and createBy != ''"> and sf.create_by = #{createBy} </if>
+			<if test="createDate != null and createDate != ''"> and sf.create_date = #{createDate} </if>
+			<if test="type != null and type != ''"> and sf.type = #{type} </if>
+		</where>
+	</select>
 	 
 	<insert id="save" parameterType="com.bootdo.filedir.domain.FileDirDO" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_file_dir

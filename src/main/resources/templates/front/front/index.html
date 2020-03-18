@@ -6,6 +6,7 @@
 <title>班级教育管理平台</title>
 <link href="/front/css/common.css" rel="stylesheet" type="text/css">
 <link href="/front/css/index.css" rel="stylesheet" type="text/css">
+<link href="/js/layui/css/layui.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/front/js/jquery.min.js"></script>
 <!-- <script type="text/javascript" src="/index/js/jquery.SuperSlide.2.1.1.js"></script>
  -->
@@ -42,159 +43,91 @@
     	<div class="indexmenu">
 			<div class="container">
 				<ul>
-					<li><a href="../front/index.html" class="on">首页</a></li>
-					<!--  -->
-					<!--<template v-for="(data,index) in listCategory">
-						<li><a v-bind:href="data.url">{{data.name}}</a></li>
-					</template>-->
-					 <li><a href="#">我的相册</a></li>
-					<li><a href="#">留言板</a></li>
-
-
+					<li class="on"><a href="/index?destination=1" >首页</a></li>
+					 <li><a href="/front/photo/myPhoto">我的相册</a></li>
+					<li><a href="/front/leavemsg/myLeavemsg">留言板</a></li>
 				</ul>
 			</div>
 		</div><!-- indexmenu  end  -->
 		<div class="container clearfix mb20">
-			<div class="indexbanner">
-				<div id="slideBox" class="slideBox">
-					<div class="bd">
-						<ul>
-						  <!--  <template v-for="(dataimg,index) in listRotaryimg">
-								<li><a href="javascript:volid(0);"><img height="250px" class="img" v-bind:src="nginxurl+dataimg.IMG_PATH"></a></li>
-							</template> -->
-						</ul>
-					</div>
-				</div>
-			</div><!-- indexbanner  end  -->
 			<div class="item_1 item_rmtj">
-				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>热门推荐</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
+				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>最新相册</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
 				<div class="mid">
 					<ul class="clearfix ul_rmtj">
-						<!--<template v-for="(dataArticles,index) in listArticles">
+						<template v-for="(photo,index) in newPhoto">
 							<li>
-								<img class="img" v-bind:src="nginxurl+dataArticles.COVER_IMAGE" />
-								<h1>{{dataArticles.TITLE}}</h1>
-								<div class="cont">
-									<p>{{dataArticles.DESCRIPTION}}</p>
-									<span>{{dataArticles.CREATE_DATE}}</span>
-									<a :href="'../index/content.html?id='+dataArticles.ID+''">点击查看</a>
-								</div>
+								<img class="img" :src="photo.url" />
+								<h1>【党政】学习宣传贯彻党的十九大精神部署会</h1>
 							</li>
-						</template>-->
-						 <li>
-							<img class="img" src="/front/img/img1.jpg" />
-							<h1>【党政】学习宣传贯彻党的十九大精神部署会</h1>
-							<div class="cont">
-								<p>12月25日海淀区社会力量办学单位党总支组织召开民办教育系统学习宣传贯彻党的十九大精神部署会，贯彻单个阿萨德花覅按了啥地方哈斯DNFask地方加上了肯德基法拉盛肯定放假拉速度快</p>
-								<span>2019-10-14</span>
-								<a href="#">点击查看</a>
-							</div>
-						</li>
-
-
+						</template>
 					</ul>
 				</div>
 			</div><!-- 热门推荐  end  -->
 			<div class="item_2 item_news fl">
-				<div class="head"><span>新闻动态</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
+				<div class="head"><span>最新留言</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
 				<div class="mid mt15">
 					<ul class="item_2ul ul_xwdt">
-					<!--	<template v-for="(dataXinWen,index) in listXinWen">
-							<li class="clearfix"><a class="title" :href="'../index/content.html?id='+dataXinWen.ID+''">{{dataXinWen.TITLE}}</a><span class="time">{{dataXinWen.CREATE_DATE}}</span></li>
-						</template>-->
+						<template v-for="(leaveMsg,index) in newLeaveMsg">
+							<li class="clearfix"><a class="title" href="#">{{leaveMsg.content}}</a><span class="time">{{leaveMsg.createDate}}</span></li>
+						</template>
 					</ul>
 				</div>
 			</div><!-- 新闻动态  end  -->
 			<div class="item_2 item_news fr slideTxtBox">
 				<div class="hd">
-					<a class="more" href="../front/xinwenList.html?name=日常监管">【更多】</a>
-					<ul><li class="on">工作管理</li><li class="">公示公告</li></ul>
+					<ul><li class="on">访问我主页</li><li class="">我访问主页</li></ul>
 				</div>
 				<div class="bd mt15">
 					<ul class="item_2ul ul_gzgl">
 						<!--<template v-for="(dataGzgl,index) in listGzgl">
 							<li class="clearfix"><a class="title" :href="'../index/content.html?id='+dataGzgl.ID+''">{{dataGzgl.TITLE}}</a><span class="time">{{dataGzgl.CREATION_DATE}}</span></li>
 						</template>-->
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">张三</a><span class="time">2020.9.03</span></li>
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">张三</a><span class="time">2020.9.03</span></li>
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">张三</a><span class="time">2020.9.03</span></li>
+
 					</ul>
 					<ul class="item_2ul ul_gsgg">
 					<!--	<template v-for="(dataGzgg,index) in listGzgg">
 							<li class="clearfix"><a class="title" :href="'../index/content.html?id='+dataGzgg.ID+''">{{dataGzgg.TITLE}}</a><span class="time">{{dataGzgg.CREATION_DATE}}</span></li>
 						</template>-->
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">李四</a><span class="time">2020.9.03</span></li>
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">李四</a><span class="time">2020.9.03</span></li>
+						<li class="clearfix"><a class="title" :href="'../index/content.html?id='">李四</a><span class="time">2020.9.03</span></li>
+
 					</ul>
 				</div>
 			</div><!-- 工作管理  end  -->
 			<div class="clearfix"></div>
-			<div class="item_1 item_dzdt fl">
-				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>电子地图</span><a class="more" href="../index/map.html">【更多】</a></div>
-				<div class="mid mt20" id= "allmap">
-
-					<!-- <img src="/index/img/mapimg.jpg" /> -->
-
-				</div>
-			</div><!-- 电子地图  end  -->
-			<div class="item_2 item_dwgk fr">
-				<div class="head"><span>党务公开</span><a class="more" href="../front/xinwenList.html?name=党务公开">【更多】</a></div>
+			<div class="item_2 item_dwgk fr" style="width: 1200px">
+				<div class="head"><span>班级同学</span></div>
 				<div class="mid mt20">
 					<ul class="item_2ul2 ul_dwgk">
-			<!--			<template v-for="(dataDwgk,index) in listDwgk">
-							<li class="clearfix"><img class="img" v-bind:src="nginxurl+dataDwgk.COVER_IMAGE"/><div class="cont"><a class="title" :href="'../index/content.html?id='+dataDwgk.ID+''" :title="dataDwgk.TITLE">
-							<template v-if="(dataDwgk.TITLE).length<=25">
-							 {{dataDwgk.TITLE.substring(0,20)}}
-							</template>
-							<template v-if="(dataDwgk.TITLE).length>25">
-							 {{dataDwgk.TITLE.substring(0,20)}}...
-							</template>
-							</a><p>{{dataDwgk.DESCRIPTION}}</p><span class="time">{{dataDwgk.CREATE_DATE}}</span></div></li>
-						</template>-->
-
-
-
-						<!-- <li class="clearfix"><img class="img" src="/index/img/img2.jpg" /><div class="cont"><a class="title" href="#">【党务】学习宣传贯彻党的十九大精神部署会</a><p>12月25日海淀区社会力量办学单位党总支组织召开民办教育系统学习宣传贯彻党的十九大精神部署会，贯彻党的十九大精神部署会，12月25日海淀区社会力量办学单位党总支组织召开民办教育系统学习宣传贯彻党的十九大</p><span class="time">2019-10-14</span></div></li>
-					 -->
+						<template v-for="(stu,index) in classStu">
+							<li>{{index+1+'.'+stu.stuName}}</li>
+						</template>
 					</ul>
+				</div>
+				<div id="page" style="float: right">
+
 				</div>
 			</div><!-- 党务公开  end  -->
-			<div class="item_2 item_bmfw fr">
-				<div class="head"><span>便民服务</span><!-- <a class="more" href="#">【更多】</a> --></div>
-				<div class="mid mt20">
-					<ul class="item_2ul3 ul_bmfw">
-						<li><a href="../front/complaint.html"><img class="img" src="/front/img/bmfw_img1.jpg" /></a></li>
-						<!-- <li><a href="#"><img class="img" src="/index/img/bmfw_img1.jpg" /></a></li>
-						<li><a href="#"><img class="img" src="/index/img/bmfw_img1.jpg" /></a></li>
-						 -->
-					</ul>
-				</div>
-			</div><!-- 便民服务  end  -->
+
 			<div class="clearfix"></div>
-			<div class="item_1 ">
+			<!--<div class="item_1 ">
 				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>专题专栏</span><a class="more" href="../index/xinwenList.html?name=新闻动态">【更多】</a></div>
 				<div class="picScroll-left">
 						<a class="next"></a>
 						<a class="prev"></a>
 					<div class="bd">
 						<div class="tempWrap"><ul class="picList">
-					<!--		<template v-for="(dataZtzl,index) in listZtzl">
+					&lt;!&ndash;		<template v-for="(dataZtzl,index) in listZtzl">
 								<li><a :href="'../index/content.html?id='+dataZtzl.ID+''">
 									<img v-bind:src="nginxurl+dataZtzl.COVER_IMAGE" />
 									<p>{{dataZtzl.title}}</p></a>
 								</li>
-							</template>-->
-							 <li><a href="#">
-								<img src="/front/img/img2.jpg" />
-								<p>党的十九大精神部署会</p></a>
-							</li>
-							<li><a href="#">
-								<img src="/front/img/img3.jpg" />
-								<p>党的十九大精神部署会</p></a>
-							</li>
-							<li><a href="#">
-								<img src="/front/img/img1.jpg" />
-								<p>党的十九大精神部署会</p></a>
-							</li>
-							<li><a href="#">
-								<img src="/front/img/img2.jpg" />
-								<p>党的十九大精神部署会</p></a>
-							</li>
+							</template>&ndash;&gt;
+
 							<li><a href="#">
 								<img src="/front/img/img3.jpg" />
 								<p>党的十九大精神部署会</p></a>
@@ -210,7 +143,7 @@
 						</ul></div>
 					</div>
 				</div>
-			</div><!-- 专题专栏  end  -->
+			</div>&lt;!&ndash; 专题专栏  end  &ndash;&gt;-->
 		</div>
     <!-- 主体  结束  -->
     </div>
@@ -227,7 +160,8 @@
 <script type="text/javascript" src="/front/js/jquery.SuperSlide.2.1.1.js"></script>
 <script type="text/javascript" src="/front/js/pre-loader.js"></script>
 <script src="/front/js/sweetalert.min.js"></script>
-<!--<script type="text/javascript" src="/index/js/index.js"></script>-->
+<script src="/js/layui/layui.all.js"></script>
+<script type="text/javascript" src="/front/js/index.js"></script>
 <!-- <script type="text/javascript" src="/index/js/map_list.js"></script>
  -->
 </html>

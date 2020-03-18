@@ -3,80 +3,113 @@
 
 <mapper namespace="com.bootdo.filedetail.dao.FileDetailDao">
 
-	<select id="get" resultType="com.bootdo.filedetail.domain.FileDetailDO">
-		select `id`,`file_id`,`dir_id`,`user_id`,`create_date` from sys_file_detail where id = #{value}
-	</select>
+    <select id="get" resultType="com.bootdo.filedetail.domain.FileDetailDO">
+        select `id`,`file_id`,`dir_id`,`user_id`,`create_date`
+        from sys_file_detail
+        where id = #{value}
+    </select>
 
-	<select id="list" resultType="com.bootdo.filedetail.domain.FileDetailDO">
-		select `id`,`file_id`,`dir_id`,`user_id`,`create_date` from sys_file_detail
-        <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="fileId != null and fileId != ''"> and file_id = #{fileId} </if>
-		  		  <if test="dirId != null and dirId != ''"> and dir_id = #{dirId} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
-		  		</where>
+    <select id="list" resultType="com.bootdo.filedetail.domain.FileDetailDO">
+        select `id`,`file_id`,`dir_id`,`user_id`,`create_date` from sys_file_detail
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="fileId != null and fileId != ''">and file_id = #{fileId}</if>
+            <if test="dirId != null and dirId != ''">and dir_id = #{dirId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="createDate != null and createDate != ''">and create_date = #{createDate}</if>
+        </where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
                 order by ${sort} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by id desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="count" resultType="int">
-		select count(*) from sys_file_detail
-		 <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="fileId != null and fileId != ''"> and file_id = #{fileId} </if>
-		  		  <if test="dirId != null and dirId != ''"> and dir_id = #{dirId} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
-		  		</where>
-	</select>
-	 
-	<insert id="save" parameterType="com.bootdo.filedetail.domain.FileDetailDO" useGeneratedKeys="true" keyProperty="id">
-		insert into sys_file_detail
-		(
-			`file_id`, 
-			`dir_id`, 
-			`user_id`, 
-			`create_date`
-		)
-		values
-		(
-			#{fileId}, 
-			#{dirId}, 
-			#{userId}, 
-			#{createDate}
-		)
-	</insert>
-	 
-	<update id="update" parameterType="com.bootdo.filedetail.domain.FileDetailDO">
-		update sys_file_detail 
-		<set>
-			<if test="fileId != null">`file_id` = #{fileId}, </if>
-			<if test="dirId != null">`dir_id` = #{dirId}, </if>
-			<if test="userId != null">`user_id` = #{userId}, </if>
-			<if test="createDate != null">`create_date` = #{createDate}</if>
-		</set>
-		where id = #{id}
-	</update>
-	
-	<delete id="remove">
-		delete from sys_file_detail where id = #{value}
-	</delete>
-	
-	<delete id="batchRemove">
-		delete from sys_file_detail where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from sys_file_detail
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="fileId != null and fileId != ''">and file_id = #{fileId}</if>
+            <if test="dirId != null and dirId != ''">and dir_id = #{dirId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="createDate != null and createDate != ''">and create_date = #{createDate}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.bootdo.filedetail.domain.FileDetailDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into sys_file_detail
+        (`file_id`,
+         `dir_id`,
+         `user_id`,
+         `create_date`)
+        values
+        (#{fileId},
+         #{dirId},
+         #{userId},
+         #{createDate})
+    </insert>
+
+    <update id="update" parameterType="com.bootdo.filedetail.domain.FileDetailDO">
+        update sys_file_detail
+        <set>
+            <if test="fileId != null">`file_id` = #{fileId},</if>
+            <if test="dirId != null">`dir_id` = #{dirId},</if>
+            <if test="userId != null">`user_id` = #{userId},</if>
+            <if test="createDate != null">`create_date` = #{createDate}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from sys_file_detail
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from sys_file_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getList" resultType="com.bootdo.filedetail.domain.FileDetailVO">
+        select fd.id ,fd.file_id,fd.dir_id,fd.user_id,fd.create_date ,sf.url
+        from sys_file_detail fd
+        left join sys_file sf on fd.file_id=sf.id
+        where 1=1
+        <if test="fileId != null"> and fd.`file_id` = #{fileId}</if>
+        <if test="dirId != null"> and fd.`dir_id` = #{dirId}</if>
+        <if test="userId != null"> and fd.`user_id` = #{userId}</if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by fd.id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getListCount" resultType="int">
+        select count(fd.id)
+        from sys_file_detail fd
+        left join sys_file sf on fd.file_id=sf.id
+        where 1=1
+        <if test="fileId != null and fileId!=''"> and fd.`file_id` = #{fileId}</if>
+        <if test="dirId != null and dirId!=''"> and fd.`dir_id` = #{dirId}</if>
+        <if test="userId != null and userId!=''"> and fd.`user_id` = #{userId}</if>
+
+    </select>
 
 </mapper>

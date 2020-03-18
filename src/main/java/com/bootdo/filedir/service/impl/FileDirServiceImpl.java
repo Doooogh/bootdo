@@ -26,7 +26,12 @@ public class FileDirServiceImpl implements FileDirService {
 	public List<FileDirDO> list(Map<String, Object> map){
 		return fileDirDao.list(map);
 	}
-	
+
+	@Override
+	public List<FileDirDO> allList(Map<String, Object> map) {
+		return fileDirDao.list(map);
+	}
+
 	@Override
 	public int count(Map<String, Object> map){
 		return fileDirDao.count(map);
@@ -51,5 +56,10 @@ public class FileDirServiceImpl implements FileDirService {
 	public int batchRemove(Integer[] ids){
 		return fileDirDao.batchRemove(ids);
 	}
-	
+
+	@Override
+	public int listCount(Map<String, Object> map) {
+		return fileDirDao.listCount(map);
+	}
+
 }

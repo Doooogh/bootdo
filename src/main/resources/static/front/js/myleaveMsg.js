@@ -1,15 +1,15 @@
 var pageNo=1;
 var vm = new Vue({
-	el: '#app',
-	
-	data:{
-	    dirId:'',  //相册id
-		varList: [],	//list
+    el: '#app',
+
+    data:{
+        dirId:'',  //相册id
+        varList: [],	//list
         photoList:[], //图片集合
         dirList:[],  //相册集合
     },
-    
-	methods: {
+
+    methods: {
         //初始执行
         init() {
             this.getDir();
@@ -23,30 +23,30 @@ var vm = new Vue({
             if(undefined==pageNo1||""==pageNo1||null==pageNo1){
                 pageNo1=1;
             }
-        	$.ajax({
-        		xhrFields: {
+            $.ajax({
+                xhrFields: {
                     withCredentials: true
                 },
-        		type: "GET",
-        		url: '/front/photo/getPhoto',
-        		data: {
-        			pageNo:pageNo1,
+                type: "GET",
+                url: '/front/photo/getPhoto',
+                data: {
+                    pageNo:pageNo1,
                     dirId:this.dirId,
-				},
-        		dataType:"json",
-        		success: function(data){
-        		 if("0" == data.rc){
-        			 vm.photoList = data.photoList;
-                     pageNo=data.pageNo;
-                     pageUtils(data.total,pageNo);
-        		 }else  {
-                     layer.msg("系统错误,请联系管理员!");
-                 }
-        		}
-        	}).done().fail(function(){
+                },
+                dataType:"json",
+                success: function(data){
+                    if("0" == data.rc){
+                        vm.photoList = data.photoList;
+                        pageNo=data.pageNo;
+                        pageUtils(data.total,pageNo);
+                    }else  {
+                        layer.msg("系统错误,请联系管理员!");
+                    }
+                }
+            }).done().fail(function(){
                 swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
                 setTimeout(function () {
-                	window.location.href = "../login.html";
+                    window.location.href = "../login.html";
                 }, 2000);
             });
         },
@@ -89,17 +89,17 @@ var vm = new Vue({
         },
         //下载
         downloadAll:function(ids){
-        	window.location.href=httpurl+"complaint/downloadFiles?ATTACHMENT="+ids;
+            window.location.href=httpurl+"complaint/downloadFiles?ATTACHMENT="+ids;
         },
-        
-		//根据url参数名称获取参数值
-		getUrlKey: function (name) {
-		    return decodeURIComponent(
-		        (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null;
-		}
-	},
 
-	mounted(){
+        //根据url参数名称获取参数值
+        getUrlKey: function (name) {
+            return decodeURIComponent(
+                (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null;
+        }
+    },
+
+    mounted(){
         this.init();
     }
 });

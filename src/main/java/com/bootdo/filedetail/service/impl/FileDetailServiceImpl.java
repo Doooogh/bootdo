@@ -1,5 +1,6 @@
 package com.bootdo.filedetail.service.impl;
 
+import com.bootdo.filedetail.domain.FileDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +52,15 @@ public class FileDetailServiceImpl implements FileDetailService {
 	public int batchRemove(Integer[] ids){
 		return fileDetailDao.batchRemove(ids);
 	}
-	
+
+	@Override
+	public List<FileDetailVO> getList(Map<String, Object> map) {
+		return fileDetailDao.getList(map);
+	}
+
+	@Override
+	public int getListCount(Map<String, Object> map) {
+		return fileDetailDao.getListCount(map);
+	}
+
 }

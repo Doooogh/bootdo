@@ -1,6 +1,7 @@
 package com.bootdo.filedetail.service;
 
 import com.bootdo.filedetail.domain.FileDetailDO;
+import com.bootdo.filedetail.domain.FileDetailVO;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,10 @@ public interface FileDetailService {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+	List<FileDetailVO> getList(Map<String, Object> map);
+
+	int getListCount(Map<String, Object> map);
+
+
 }
