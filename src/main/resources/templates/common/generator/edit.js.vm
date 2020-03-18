@@ -33,17 +33,25 @@ function update() {
 
 }
 function validateRule() {
-	var icon = "<i class='fa fa-times-circle'></i> ";
-	$("#signupForm").validate({
-		rules : {
-			name : {
-				required : true
-			}
-		},
-		messages : {
-			name : {
-				required : icon + "请输入名字"
-			}
-		}
-	})
+    var icon = "<i class='fa fa-times-circle'></i> ";
+    $("#signupForm").validate({
+        rules : {
+#foreach($column in $columns)
+#if($column.columnName != $pk.columnName)
+	${column.attrname}:{
+            required : true
+        },
+		#end
+	#end
+},
+    messages : {
+#foreach($column in $columns)
+#if($column.columnName != $pk.columnName)
+${column.attrname}:{
+                required : icon + "请输入${column.comments}"
+            },
+#end
+#end
+    }
+})
 }

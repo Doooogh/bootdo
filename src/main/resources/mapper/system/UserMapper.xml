@@ -36,6 +36,7 @@
             <if test="province != null and province != ''">and province = #{province}</if>
             <if test="city != null and city != ''">and city = #{city}</if>
             <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="name != null and name != ''">or  NAME  like CONCAT(CONCAT('%',#{name}),'%')</if>
         </where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -159,4 +160,9 @@
     <select id="listAllDept" resultType="long">
 				select DISTINCT dept_id from sys_user
 	</select>
+
+
+    <select id="getListByDeptId" resultType="com.bootdo.system.domain.UserDO">
+        select user_id,name,dept_id from sys_user where dept_id=#{deptId} and user_id!=#{userId}
+    </select>
 </mapper>

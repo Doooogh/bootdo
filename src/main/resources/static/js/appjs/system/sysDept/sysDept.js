@@ -31,7 +31,7 @@ function load() {
 					},
 					{
 						field : 'name',
-						title : '部门名称',
+						title : '学校或班级名称',
                         valign : 'center',
 						witth :20
 					},

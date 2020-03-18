@@ -18,6 +18,8 @@ public interface UserService {
 
 	List<UserDO> list(Map<String, Object> map);
 
+	List<UserDO> listAll(Map<String, Object> map);
+
 	int count(Map<String, Object> map);
 
 	int save(UserDO user);
@@ -54,4 +56,8 @@ public interface UserService {
 	 * @throws Exception
 	 */
     Map<String, Object> updatePersonalImg(MultipartFile file, String avatar_data, Long userId) throws Exception;
+
+
+
+
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.transaction.dao.TransactionDao">
+
+	<select id="get" resultType="com.bootdo.transaction.domain.TransactionDO">
+		select `id`,`content`,`dept_id`,`create_by`,`create_date` from user_transaction where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.transaction.domain.TransactionDO">
+		select `id`,`content`,`dept_id`,`create_by`,`create_date` from user_transaction
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from user_transaction
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.transaction.domain.TransactionDO" useGeneratedKeys="true" keyProperty="id">
+		insert into user_transaction
+		(
+			`content`, 
+			`dept_id`, 
+			`create_by`, 
+			`create_date`
+		)
+		values
+		(
+			#{content}, 
+			#{deptId}, 
+			#{createBy}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.transaction.domain.TransactionDO">
+		update user_transaction 
+		<set>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from user_transaction where id = #{value}
+	</delete>
+
+	<delete id="batchRemove">
+		delete from user_transaction where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="listByDeptId">
+		select `id`,`content`,`dept_id`,`create_by`,`create_date` from user_transaction
+		where dept_id=#{deptId}
+		order by create_date desc
+	</select>
+
+</mapper>

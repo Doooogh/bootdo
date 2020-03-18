@@ -34,4 +34,17 @@ public interface DeptService {
 	boolean checkDeptHasUser(Long deptId);
 
 	List<Long> listChildrenIds(Long parentId);
+
+	/**
+	 * 根据deptId 查询所有的子类
+	 * @param deptId
+	 * @return
+	 */
+	List<DeptDO>listAllChildDept(String deptId);
+
+	/**
+	 * 查询所有的班级 (就是没子集的)
+	 * @return
+	 */
+	List<DeptDO> listNoChildDept();
 }

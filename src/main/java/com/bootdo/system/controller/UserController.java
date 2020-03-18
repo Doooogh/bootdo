@@ -15,6 +15,7 @@ import com.bootdo.system.service.UserService;
 import com.bootdo.system.vo.UserVO;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/sys/user")
 @Controller
@@ -51,10 +49,39 @@ public class UserController extends BaseController {
 	PageUtils list(@RequestParam Map<String, Object> params) {
 		// 查询列表数据
 		Query query = new Query(params);
+		if((null==query.get("deptId")||StringUtils.isBlank((String)query.get("deptId")))&&ShiroUtils.getUserId()!=1L){
+			query.put("deptId",ShiroUtils.getUser().getDeptId());
+		}
 		List<UserDO> sysUserList = userService.list(query);
+		Iterator<UserDO> iterator = sysUserList.iterator();
+		while (iterator.hasNext()){
+			if(iterator.next().getUserId()==ShiroUtils.getUserId()){
+				iterator.remove();
+			}
+		}
 		int total = userService.count(query);
 		PageUtils pageUtil = new PageUtils(sysUserList, total);
 		return pageUtil;
+	}
+
+
+	@GetMapping("/listAll")
+	@RequiresPermissions("sys:user:user")
+	@ResponseBody
+	public R listAll(UserDO user){
+		R result=new R();
+		Map<String, Object> params=new HashMap<>();
+		params.put("name",user.getName());
+		List<UserDO> sysUserList = userService.listAll(params);
+		List<Map<String,Object>> listMap=new ArrayList<>();
+		for (UserDO userDO : sysUserList) {
+			Map<String,Object> userMap=new HashMap<>();
+			userMap.put("id",userDO.getUserId());
+			userMap.put("text",userDO.getName());
+			listMap.add(userMap);
+		}
+		result.put("list",listMap);
+		return result;
 	}
 
 	@RequiresPermissions("sys:user:add")

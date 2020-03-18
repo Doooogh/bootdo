@@ -158,4 +158,11 @@ public class DeptController extends BaseController {
 		return  prefix + "/deptTree";
 	}
 
+
+	@GetMapping("/getAllClass")
+	@ResponseBody
+	public List<DeptDO> getAllClass(){
+		return sysDeptService.listNoChildDept();
+	}
+
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.filedetail.dao.FileDetailDao">
+
+	<select id="get" resultType="com.bootdo.filedetail.domain.FileDetailDO">
+		select `id`,`file_id`,`dir_id`,`user_id`,`create_date` from sys_file_detail where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.filedetail.domain.FileDetailDO">
+		select `id`,`file_id`,`dir_id`,`user_id`,`create_date` from sys_file_detail
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fileId != null and fileId != ''"> and file_id = #{fileId} </if>
+		  		  <if test="dirId != null and dirId != ''"> and dir_id = #{dirId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sys_file_detail
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="fileId != null and fileId != ''"> and file_id = #{fileId} </if>
+		  		  <if test="dirId != null and dirId != ''"> and dir_id = #{dirId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.filedetail.domain.FileDetailDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_file_detail
+		(
+			`file_id`, 
+			`dir_id`, 
+			`user_id`, 
+			`create_date`
+		)
+		values
+		(
+			#{fileId}, 
+			#{dirId}, 
+			#{userId}, 
+			#{createDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.filedetail.domain.FileDetailDO">
+		update sys_file_detail 
+		<set>
+			<if test="fileId != null">`file_id` = #{fileId}, </if>
+			<if test="dirId != null">`dir_id` = #{dirId}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sys_file_detail where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sys_file_detail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

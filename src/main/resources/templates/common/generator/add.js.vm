@@ -32,18 +32,28 @@ function save() {
 	});
 
 }
+
+
 function validateRule() {
 	var icon = "<i class='fa fa-times-circle'></i> ";
 	$("#signupForm").validate({
 		rules : {
-			name : {
-				required : true
-			}
+#foreach($column in $columns)
+	#if($column.columnName != $pk.columnName)
+${column.attrname}:{
+               		 required : true
+                },
+		#end
+	#end
 		},
 		messages : {
-			name : {
-				required : icon + "请输入姓名"
-			}
+#foreach($column in $columns)
+#if($column.columnName != $pk.columnName)
+${column.attrname}:{
+     				  required : icon + "请输入${column.comments}"
+		},
+		#end
+	#end
 		}
 	})
 }

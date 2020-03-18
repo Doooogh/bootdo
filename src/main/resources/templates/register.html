@@ -50,14 +50,22 @@
                       <input id="repassword" class="input-material" type="password" name="repassword" placeholder="确认密码"   >
 
                     </div>
+
                     <div class="form-group">
                       <input id="mobile" class="input-material" type="text" name="mobile" placeholder="请输入手机号"   >
-
                     </div>
                     <div class="form-group">
                       <input id="email" class="input-material" type="email" name="email" placeholder="请输入邮箱"   >
-
                     </div>
+
+                    <div class="form-group">
+
+                      <label class="col-sm-3 control-label" style="padding:0 ;float: left">班级：</label>
+                      <select id="deptId" name="deptId" class="form-control " >
+                        <option value="">请选择班级</option>
+                      </select>
+                    </div>
+
                     <div class="form-group">
                       <button id="register" type="button" name="registerSubmit" class="btn btn-primary">注册</button>
                     </div>
@@ -81,12 +89,17 @@
     <script src="/js/plugins/layer/layer.min.js" th:src="@{/js/plugins/layer/layer.min.js}"></script>
     <script>
         $(document).ready(function () {
+
+
             $("#register").on('click', function () {
                 $("#registerFrom").submit();
             });
             validateRule();
             $("body").keydown(keyDownLogon);
             // getVerify($("#imgVerify"));
+
+
+            getAllClass();
         });
 
         $.validator.setDefaults({
@@ -105,7 +118,8 @@
                         var index = layer.load(1, {
                             shade: [0.1, '#fff'] //0.1透明度的白色背景
                         });
-                        parent.location.href = '/login';
+                        parent.layer.msg(r.msg);
+                        window.location.href = '/login?username='+r.username+'&password='+r.password;
                     } else {
                         layer.msg(r.msg);
                     }
@@ -155,6 +169,9 @@
                     email:{
                         required: true,
                         email:true
+                    },
+                    deptId:{
+                        required: true,
                     }
 
                 },
@@ -183,6 +200,9 @@
                     email:{
                         required: "请输入邮箱",
                         email:"邮箱格式不正确"
+                    },
+                    deptId:{
+                        required: "请选择班级",
                     }
                 },
                 errorElement: "div",
@@ -206,6 +226,26 @@
             if (event.keyCode == "13") {
                 $("#login").trigger('click');
             }
+        }
+        
+        function getAllClass() {
+            $.ajax({
+              type:'GET',
+              url: "/system/sysDept/getAllClass",
+              dataType:'json',
+              success:function (res) {
+                var list=new Array();
+                list=res;
+                $.each(list,function (index ,dept) {
+                    var str="<option value=\""+dept.deptId+"\">"+dept.name+"</option>\n";
+                    $("#deptId").append(str);
+                });
+
+              },
+              error:function () {
+                  alert("系统错误，请联系系统管理员!");
+              }
+        });
         }
 
     </script>

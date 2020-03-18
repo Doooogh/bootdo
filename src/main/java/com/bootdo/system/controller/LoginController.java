@@ -13,6 +13,7 @@ import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.MenuService;
 import com.bootdo.system.service.UserService;
 import io.swagger.models.auth.In;
+import net.sf.ehcache.search.parser.MAggregate;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -52,27 +53,37 @@ public class LoginController extends BaseController {
 
     @Log("请求访问主页")
     @GetMapping({"/index"})
-    String index(Model model) {
-        List<Tree<MenuDO>> menus = menuService.listMenuTree(getUserId());
-        model.addAttribute("menus", menus);
-        model.addAttribute("name", getUser().getName());
-        FileDO fileDO = fileService.get(getUser().getPicId());
-        if (fileDO != null && fileDO.getUrl() != null) {
-            if (fileService.isExist(fileDO.getUrl())) {
-                model.addAttribute("picUrl", fileDO.getUrl());
+    String index(Model model,String destination) {
+
+        if(destination.equals("2")){
+            List<Tree<MenuDO>> menus = menuService.listMenuTree(getUserId());
+            model.addAttribute("menus", menus);
+            model.addAttribute("name", getUser().getName());
+            FileDO fileDO = fileService.get(getUser().getPicId());
+            if (fileDO != null && fileDO.getUrl() != null) {
+                if (fileService.isExist(fileDO.getUrl())) {
+                    model.addAttribute("picUrl", fileDO.getUrl());
+                } else {
+                    model.addAttribute("picUrl", "/img/photo_s.jpg");
+                }
             } else {
                 model.addAttribute("picUrl", "/img/photo_s.jpg");
             }
-        } else {
-            model.addAttribute("picUrl", "/img/photo_s.jpg");
+            model.addAttribute("username", getUser().getUsername());
+            return "index_v1";
+        }else if(destination.equals("1")){
+            return "/front/front/index";
         }
-        model.addAttribute("username", getUser().getUsername());
-        return "index_v1";
+        return "/front/front/index";
     }
 
     @GetMapping(value = {"/login","","/"})
-    String login(Model model) {
+    String login(Model model,String username,String password) {
         model.addAttribute("codeValidate",bootdoConfig.getCodeValidate());
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(username)&& org.apache.commons.lang3.StringUtils.isNotBlank(password)){
+            model.addAttribute("username",username);
+            model.addAttribute("password",password);
+        }
         return "login";
     }
     @GetMapping(value = {"/register"})
@@ -112,16 +123,23 @@ public class LoginController extends BaseController {
         }
     }
 
-    @GetMapping("/register")
+    @PostMapping("/register")
     @ResponseBody
     R ajaxRegister(UserDO user){
         try{
-            userService.registerUser(user);
+            String password=user.getPassword();
+           int r= userService.registerUser(user);
+           if(r>0){
+               Map<String,Object> map=new HashMap<>();
+               map.put("username",user.getUsername());
+               map.put("password",password);
+               return R.ok(map);
+           }
         }catch (Exception e){
             e.printStackTrace();
             return R.error("注册失败，请稍后重试!");
         }
-        return R.ok();
+        return R.error("注册失败，请稍后重试!");
     }
     @GetMapping("/logout")
     String logout() {
@@ -131,18 +149,15 @@ public class LoginController extends BaseController {
 
     @GetMapping("/exitUsername")
     @ResponseBody
-    R exitUsername(String username){
+    boolean exitUsername(String username){
         Map<String,Object> map=new HashMap<>();
         map.put("username",username);
         try{
-            if(userService.exit(map)){
-                return R.ok();
-            }
+                return !userService.exit(map);
         }catch (Exception e){
             e.printStackTrace();
-            return R.error();
+            return false;
         }
-        return R.error();
     }
 
     @GetMapping("/main")

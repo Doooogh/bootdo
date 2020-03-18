@@ -7,6 +7,12 @@ $.validator.setDefaults({
 		save();
 	}
 });
+
+jQuery.validator.addMethod("isDate",function(value,element){
+    var tel = /^(0\d{2,3}-)?\d{7,8}$/g;//区号3,4位,号码7,8位
+    return this.optional(element) || (tel.test(value));
+},"请填写正确的座机号码");
+
 function getCheckedRoles() {
 	var adIds = "";
 	$("input:checkbox[name=role]:checked").each(function(i) {

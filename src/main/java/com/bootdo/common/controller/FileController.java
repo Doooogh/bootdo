@@ -5,6 +5,10 @@ import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.service.FileService;
 import com.bootdo.common.utils.*;
 import javax.servlet.http.HttpServletRequest;
+
+import com.bootdo.filedetail.domain.FileDetailDO;
+import com.bootdo.filedetail.service.FileDetailService;
+import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +38,9 @@ public class FileController extends BaseController {
 	@Autowired
 	private BootdoConfig bootdoConfig;
 
+	@Autowired
+	private FileDetailService fileDetailService;
+
 	@GetMapping()
 	@RequiresPermissions("common:sysFile:sysFile")
 	String sysFile(Model model) {
@@ -48,6 +55,19 @@ public class FileController extends BaseController {
 		// 查询列表数据
 		Query query = new Query(params);
 		List<FileDO> sysFileList = sysFileService.list(query);
+		int total = sysFileService.count(query);
+		PageUtils pageUtils = new PageUtils(sysFileList, total);
+		return pageUtils;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/myList")
+	public PageUtils myList(@RequestParam Map<String, Object> params) {
+		// 查询列表数据
+		Query query = new Query(params);
+		query.put("userId",ShiroUtils.getUserId());
+		List<FileDO> sysFileList = sysFileService.myList(query);
 		int total = sysFileService.count(query);
 		PageUtils pageUtils = new PageUtils(sysFileList, total);
 		return pageUtils;
@@ -153,6 +173,36 @@ public class FileController extends BaseController {
 		}
 
 		if (sysFileService.save(sysFile) > 0) {
+			return R.ok().put("fileName",sysFile.getUrl());
+		}
+		return R.error();
+	}
+
+	@ResponseBody
+	@PostMapping("/myUpload")
+	R myUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request,String fileDir) {
+		if ("test".equals(getUsername())) {
+			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
+		}
+		String fileName = file.getOriginalFilename();
+		fileName = FileUtil.renameToUUID(fileName);
+		FileDO sysFile = new FileDO(FileType.fileType(fileName), "/files/" + fileName, new Date());
+		try {
+			FileUtil.uploadFile(file.getBytes(), bootdoConfig.getUploadPath(), fileName);
+
+
+		} catch (Exception e) {
+			return R.error();
+		}
+
+		int id = sysFileService.save(sysFile);
+		if ( id> 0) {
+			FileDetailDO fileDetailDO=new FileDetailDO();
+			fileDetailDO.setFileId((int)(long)sysFile.getId());
+			fileDetailDO.setDirId(Integer.valueOf(fileDir));
+			fileDetailDO.setUserId(Integer.valueOf((int)(long)ShiroUtils.getUserId()));
+			fileDetailDO.setCreateDate(new Date());
+			fileDetailService.save(fileDetailDO);
 			return R.ok().put("fileName",sysFile.getUrl());
 		}
 		return R.error();

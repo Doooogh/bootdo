@@ -91,4 +91,9 @@
     <select id="getDeptUserNumber" resultType="int">
 		select count(*) from sys_user where dept_id = #{value}
 	</select>
+
+
+	<select id="getChildDeptNum" resultType="int">
+		select count(dept_id) from sys_dept where parent_id=#{value}
+	</select>
 </mapper>

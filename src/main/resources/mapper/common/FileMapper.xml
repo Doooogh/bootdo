@@ -27,6 +27,28 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
+
+	<select id="myList" resultType="com.bootdo.common.domain.FileDO">
+		select sf.`id`,sf.`type`,sf.`url`,sf.`create_date` from sys_file sf
+		left join  sys_file_detail fd  on sf.id=fd.file_id
+		where fd.user_id=#{userId}
+			<if test="id != null and id != ''"> and sf.id = #{id} </if>
+			<if test="type != null and type != ''"> and sf.type = #{type} </if>
+			<if test="url != null and url != ''"> and sf.url = #{url} </if>
+			<if test="fileDir != null and fileDir != ''"> and fd.dir_id = #{fileDir} </if>
+			<if test="createDate != null and createDate != ''"> and sf.create_date = #{createDate} </if>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by sf.id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
 	
  	<select id="count" resultType="int">
 		select count(*) from sys_file

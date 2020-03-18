@@ -17,6 +17,27 @@ public class BootdoConfig {
 
 	private String defaultDeptId;
 
+
+	private String defaultRoleId;
+
+	private String adminId;
+
+	public String getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
+
+	public String getDefaultRoleId() {
+		return defaultRoleId;
+	}
+
+	public void setDefaultRoleId(String defaultRoleId) {
+		this.defaultRoleId = defaultRoleId;
+	}
+
 	public String getDefaultDeptId() {
 		return defaultDeptId;
 	}

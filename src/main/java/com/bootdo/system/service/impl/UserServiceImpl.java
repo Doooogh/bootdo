@@ -73,6 +73,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDO> listAll(Map<String, Object> map) {
+        return userMapper.list(map);
+    }
+
+    @Override
     public int count(Map<String, Object> map) {
         return userMapper.count(map);
     }
@@ -164,10 +169,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int registerUser(UserDO user) {
         user.setStatus(1);
-        user.setUserIdCreate(1L);
-        user.setDeptId(2L);
-        List<Long> roleDOList=new ArrayList<>();
-        user.setRoleIds(roleDOList);
+        user.setUserIdCreate(Long.valueOf(bootdoConfig.getAdminId()));
+        user.setPassword(MD5Utils.encrypt(user.getUsername(), user.getPassword()));
+        List<Long> roleIdList=new ArrayList<>();
+        roleIdList.add(Long.valueOf(bootdoConfig.getDefaultRoleId()));
+        user.setRoleIds(roleIdList);
         return   save(user);
     }
 
@@ -200,6 +206,12 @@ public class UserServiceImpl implements UserService {
             tree.setState(state);
             trees.add(tree);
         }
+        Long nowDeptId=null;
+        if(ShiroUtils.getUserId()==1L){
+            nowDeptId=0L;
+        }else{
+            nowDeptId=ShiroUtils.getUser().getDeptId();
+        }
         List<UserDO> users = userMapper.list(new HashMap<String, Object>(16));
         for (UserDO user : users) {
             Tree<DeptDO> tree = new Tree<DeptDO>();
@@ -213,7 +225,7 @@ public class UserServiceImpl implements UserService {
             trees.add(tree);
         }
         // 默认顶级菜单为０，根据数据库实际情况调整
-        Tree<DeptDO> t = BuildTree.build(trees);
+        Tree<DeptDO> t = BuildTree.build(trees,String.valueOf(nowDeptId));
         return t;
     }
 
@@ -262,5 +274,9 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+
+
+
+
 
 }

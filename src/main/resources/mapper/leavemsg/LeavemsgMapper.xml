@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.leavemsg.dao.LeavemsgDao">
+
+	<select id="get" resultType="com.bootdo.leavemsg.domain.LeavemsgDO">
+		select `id`,`touser_id`,`fromuser_id`,`content`,`create_date`,`is_pass` from user_leavemsg where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.leavemsg.domain.LeavemsgDO">
+		select `id`,`touser_id`,`fromuser_id`,`content`,`create_date`,`is_pass`,su.name as formUserName, u.name as toUserName from user_leavemsg ul
+		left join  sys_user u on ul.touser_id=u.user_id
+		left join  sys_user su on ul.fromuser_id=su.user_id
+
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="touserId != null and touserId != ''"> and touser_id = #{touserId} </if>
+		  		  <if test="fromuserId != null and fromuserId != ''"> and fromuser_id = #{fromuserId} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="isPass != null and isPass != ''"> and is_pass = #{isPass} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from user_leavemsg
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="touserId != null and touserId != ''"> and touser_id = #{touserId} </if>
+		  		  <if test="fromuserId != null and fromuserId != ''"> and fromuser_id = #{fromuserId} </if>
+		  		  <if test="content != null and content != ''"> and content = #{content} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="isPass != null and isPass != ''"> and is_pass = #{isPass} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.leavemsg.domain.LeavemsgDO" useGeneratedKeys="true" keyProperty="id">
+		insert into user_leavemsg
+		(
+			`touser_id`, 
+			`fromuser_id`, 
+			`content`, 
+			`create_date`, 
+			`is_pass`
+		)
+		values
+		(
+			#{touserId}, 
+			#{fromuserId}, 
+			#{content}, 
+			#{createDate}, 
+			#{isPass}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.leavemsg.domain.LeavemsgDO">
+		update user_leavemsg 
+		<set>
+			<if test="touserId != null">`touser_id` = #{touserId}, </if>
+			<if test="fromuserId != null">`fromuser_id` = #{fromuserId}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="isPass != null">`is_pass` = #{isPass}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from user_leavemsg where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from user_leavemsg where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

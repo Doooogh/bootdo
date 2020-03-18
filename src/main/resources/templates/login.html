@@ -33,10 +33,10 @@
             <div class="content">
               <form  class="form-validate" id="loginFrom">
                 <div class="form-group">
-                  <input id="login-username" type="text" name="username" autocomplete="off"  data-msg="请输入用户名" placeholder="用户名"  class="input-material">
+                  <input id="login-username" type="text" name="username" autocomplete="off"  th:value="${null!=username?username:''}"  data-msg="请输入用户名" placeholder="用户名"  class="input-material">
                 </div>
                 <div class="form-group">
-                  <input id="login-password" type="password" name="password" autocomplete="off"  data-msg="请输入密码" placeholder="密码" class="input-material">
+                  <input id="login-password" type="password" name="password" autocomplete="off" th:value="${null!=password?password:''}"  data-msg="请输入密码" placeholder="密码" class="input-material">
                 </div>
                 <button id="login" type="button" class="btn btn-primary">登录</button>
                 <div style="margin-top: -40px;">
@@ -44,6 +44,16 @@
               </form>
               <br />
               <small>没有账号?</small><a href="/register" class="signup">&nbsp;注册</a>
+              <div style="font-size: 14px">
+                <small>登录选项：</small>
+                <label class="radio-inline">
+                  <input type="radio" name="destination" id="destination1" value="1" checked> <small>页面</small>
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="destination" id="destination2" value="2"> <small>管理平台</small>
+                </label>
+              </div>
+
             </div>
           </div>
         </div>
@@ -63,7 +73,11 @@
 <!-- Main File-->
 <!--<script src="/js/front.js"></script>-->
 <script>
+  if(window.top.location.href!=window.location.href){
+      window.top.location.href=window.location.href;
+  }
     $(document).ready(function () {
+
         $("#login").on('click', function () {
             $("#loginFrom").submit();
         });
@@ -125,7 +139,8 @@
                     var index = layer.load(1, {
                         shade: [0.1, '#fff'] //0.1透明度的白色背景
                     });
-                    parent.location.href = '/index';
+                   var destination= $("input[name='destination']:checked").val();  //登录成功后要跳转的页面  1 前端页面 2后台管理系统
+                    parent.location.href = '/index?destination='+destination;
                 } else {
                     layer.msg(r.msg);
                 }

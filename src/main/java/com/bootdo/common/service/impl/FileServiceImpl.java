@@ -31,7 +31,12 @@ public class FileServiceImpl implements FileService {
 	public List<FileDO> list(Map<String, Object> map){
 		return sysFileMapper.list(map);
 	}
-	
+
+	@Override
+	public List<FileDO> myList(Map<String, Object> map) {
+		return sysFileMapper.myList(map);
+	}
+
 	@Override
 	public int count(Map<String, Object> map){
 		return sysFileMapper.count(map);

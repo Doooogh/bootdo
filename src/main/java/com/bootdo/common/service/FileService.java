@@ -17,6 +17,8 @@ public interface FileService {
 	FileDO get(Long id);
 	
 	List<FileDO> list(Map<String, Object> map);
+
+	List<FileDO> myList(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
 	

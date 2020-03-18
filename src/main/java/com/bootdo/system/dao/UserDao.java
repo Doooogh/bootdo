@@ -32,4 +32,7 @@ public interface UserDao {
 	
 	Long[] listAllDept();
 
+
+	List<UserDO> getListByDeptId(Map<String,Object> map);
+
 }
