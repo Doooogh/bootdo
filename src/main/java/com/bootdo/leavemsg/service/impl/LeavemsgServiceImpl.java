@@ -1,5 +1,6 @@
 package com.bootdo.leavemsg.service.impl;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class LeavemsgServiceImpl implements LeavemsgService {
 	
 	@Override
 	public int save(LeavemsgDO leavemsg){
+
 		return leavemsgDao.save(leavemsg);
 	}
 	
@@ -67,10 +69,10 @@ public class LeavemsgServiceImpl implements LeavemsgService {
 	public boolean hasZZ(String content) {
 		for (String s : zz) {
 			if(content.contains(s)){
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 

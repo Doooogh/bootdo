@@ -34,7 +34,10 @@
 	</select>
 	
  	<select id="count" resultType="int">
-		select count(*) from user_leavemsg
+		select count(*)
+		from user_leavemsg ul
+		left join  sys_user u on ul.touser_id=u.user_id
+		left join  sys_user su on ul.fromuser_id=su.user_id
 		 <where>  
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="touserId != null and touserId != ''"> and touser_id = #{touserId} </if>

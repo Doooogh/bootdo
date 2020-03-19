@@ -5,21 +5,22 @@ var vm = new Vue({
     data:{
         dirId:'',  //相册id
         varList: [],	//list
-        photoList:[], //图片集合
-        dirList:[],  //相册集合
+        leaveMsgList:[], //留言集合
+        pageNo:1,
+        total:0,
+        content:'', //内容
     },
 
     methods: {
         //初始执行
         init() {
-            this.getDir();
             setTimeout(function(){
-                vm.getPhoto(pageNo);
+                vm.getList(vm.pageNo);
             },200);
 
         },
         //获取列表
-        getPhoto: function(pageNo1){
+        getList: function(pageNo1){
             if(undefined==pageNo1||""==pageNo1||null==pageNo1){
                 pageNo1=1;
             }
@@ -28,17 +29,17 @@ var vm = new Vue({
                     withCredentials: true
                 },
                 type: "GET",
-                url: '/front/photo/getPhoto',
+                url: '/front/leavemsg/getList',
                 data: {
                     pageNo:pageNo1,
-                    dirId:this.dirId,
                 },
                 dataType:"json",
                 success: function(data){
                     if("0" == data.rc){
-                        vm.photoList = data.photoList;
-                        pageNo=data.pageNo;
-                        pageUtils(data.total,pageNo);
+                        vm.leaveMsgList = data.leaveMsgList;
+                        vm.pageNo=data.pageNo;
+                        vm.total=data.total;
+                        pageUtils(vm.total,vm.pageNo);
                     }else  {
                         layer.msg("系统错误,请联系管理员!");
                     }
@@ -50,35 +51,54 @@ var vm = new Vue({
                 }, 2000);
             });
         },
-        //获取相册列表
-        getDir: function(){
+
+        save:function(){
             $.ajax({
                 xhrFields: {
                     withCredentials: true
                 },
-                type: "GET",
-                url: '/front/photo/getDir',
+                type: "POST",
+                url: '/front/leavemsg/save',
                 dataType:"json",
+                data:{
+                  content:vm.content,
+                },
                 success: function(data){
                     if("0" == data.rc){
-                        vm.dirList = data.dirList;
+                        layer.msg("提交成功!");
+                        $('.text').val("");
+                        vm.pageNo=1;  //重置页数
+                        vm.getList(vm.pageNo);
+                    }else if("1"==data.rc){
+                        layer.msg("提交失败!，内容中包含非法词语");
                     }else  {
                         layer.msg("系统错误,请联系管理员!");
                     }
                 }
-            }).done().fail(function(){
-                swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
-                setTimeout(function () {
-                    window.location.href = "../login.html";
-                }, 2000);
-            });
+            })
         },
-        reGetPhoto:function(dir){
-            vm.dirId=dir;
-            pageNo=1;
-            vm.getPhoto(pageNo);
+        del:function(id){
+            $.ajax({
+                xhrFields: {
+                    withCredentials: true
+                },
+                type: "POST",
+                url: '/front/leavemsg/del',
+                dataType:"json",
+                data:{
+                    id:id
+                },
+                success: function(data){
+                    if("0" == data.rc){
+                        layer.msg("删除成功!");
+                        vm.pageNo=1;  //重置页数
+                        vm.getList(vm.pageNo);
+                    }else  {
+                        layer.msg("系统错误,请联系管理员!");
+                    }
+                }
+            })
         },
-
         download:function(url){
             window.location.href='/front/photo/download?url='+url;
         },
@@ -116,10 +136,37 @@ function pageUtils(total,curr) {
             ,layout: ['count', 'prev', 'page', 'next' , 'refresh', 'skip']
             ,jump: function(obj,first){
                 if(!first){
-                    pageNo=obj.curr;
-                    vm.getPhoto(pageNo);
+                    vm.pageNo=obj.curr;
+                    vm.getList(vm.pageNo);
                 }
             }
         });
     });
+}
+
+$(function () {
+    // 绑定表情
+    $('.face-icon').SinaEmotion($('.text'));
+
+});
+// 测试本地解析
+function out() {
+    var inputText = $('.text').val();
+    vm.content=AnalyticEmotion(inputText);
+    vm.save();
+}
+
+var html;
+function reply(content){
+    html  = '<li>';
+    html += '<div class="head-face">';
+    html += '<img src="images/1.jpg" / >';
+    html += '</div>';
+    html += '<div class="reply-cont">';
+    html += '<p class="username">小小红色飞机</p>';
+    html += '<p class="comment-body">'+content+'</p>';
+    html += '<p class="comment-footer">2016年10月5日　回复　点赞54　转发12</p>';
+    html += '</div>';
+    html += '</li>';
+    return html;
 }

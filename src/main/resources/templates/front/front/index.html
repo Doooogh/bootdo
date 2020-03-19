@@ -27,12 +27,12 @@
 				班级教育管理系统
 				<!-- <a class="fr c666" href="#">联系我们</a>
 				<a class="fr c666" href="#">人才招聘</a>-->
-				<!-- <a class="fr c666" href="../sys/index/index.html">返回后台</a> -->
+				<a class="fr c666" href="/logout">退出</a>
 			</div>
 		</div><!-- indextop  end  -->
 		<div class="indexhead">
 			<div class="container">
-				<img class="logo" src="/front/img/logo.png" />
+				<!--<img class="logo" src="/front/img/logo.png" />-->
 				<!-- <div class="searchbox">
 					<div class="searchinput"><input type="text" placeholder="请输入您要搜索的内容" /></div>
 					<div class="searchbtn"><a href="#"></a></div>
@@ -51,7 +51,7 @@
 		</div><!-- indexmenu  end  -->
 		<div class="container clearfix mb20">
 			<div class="item_1 item_rmtj">
-				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>最新相册</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
+				<div class="head"><img class="backimg" src="/front/img/item1head.png" /><img class="iconimg" src="/front/img/icon1.png" /><span>最新相册</span><a class="more" href="/front/photo/myPhoto">【更多】</a></div>
 				<div class="mid">
 					<ul class="clearfix ul_rmtj">
 						<template v-for="(photo,index) in newPhoto">
@@ -64,11 +64,11 @@
 				</div>
 			</div><!-- 热门推荐  end  -->
 			<div class="item_2 item_news fl">
-				<div class="head"><span>最新留言</span><a class="more" href="../front/xinwenList.html?name=新闻动态">【更多】</a></div>
+				<div class="head"><span>最新留言</span><a class="more" href="/front/leavemsg/myLeavemsg">【更多】</a></div>
 				<div class="mid mt15">
 					<ul class="item_2ul ul_xwdt">
 						<template v-for="(leaveMsg,index) in newLeaveMsg">
-							<li class="clearfix"><a class="title" href="#">{{leaveMsg.content}}</a><span class="time">{{leaveMsg.createDate}}</span></li>
+							<li class="clearfix"><a class="title" href="#" v-html="leaveMsg.content"></a><span class="time">{{leaveMsg.createDate}}</span></li>
 						</template>
 					</ul>
 				</div>
@@ -151,8 +151,8 @@
 <!-- 底部  开始  -->
 <div class="footer">
 	<div class="main">
-		<p>版权所有：北京市海淀区教育委员会     京ICP备17037050号-2</br>
-		地址：北京市海淀区西四环北路11号　咨询热线：96181</p>
+		<p>版权所有：北京市xxxxx    </br>
+		地址：北京市xxxxxxxxx　咨询热线：xxxxx</p>
 	</div>
 </div>
 <!-- 底部  结束  -->

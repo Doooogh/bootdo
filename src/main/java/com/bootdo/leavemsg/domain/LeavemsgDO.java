@@ -28,12 +28,27 @@ public class LeavemsgDO implements Serializable {
 	//审批是否通过 0否 1是
 	private Integer isPass;
 
-
 	//发送者
 	private String formUserName;
 
 	//给谁留言
 	private String toUserName;
+
+	public String getFormUserName() {
+		return formUserName;
+	}
+
+	public void setFormUserName(String formUserName) {
+		this.formUserName = formUserName;
+	}
+
+	public String getToUserName() {
+		return toUserName;
+	}
+
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
+	}
 
 	/**
 	 * 设置：id

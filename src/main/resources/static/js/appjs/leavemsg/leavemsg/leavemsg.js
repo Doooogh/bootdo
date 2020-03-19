@@ -48,7 +48,7 @@ function load() {
 									checkbox : true
 								},
 																{
-									field : 'fromUserName',
+									field : 'formUserName',
 									title : '留言者' 
 								},
 																{
@@ -63,7 +63,7 @@ function load() {
 									field : 'isPass', 
 									title : '审批是否通过',
 									formatter:function (value,row,index) {
-										if(value=='0'){
+										if(value=='1'){
 											return "通过";
 										}else{
 											return "未通过";
